@@ -2,13 +2,13 @@ const asyncHandler = require("express-async-handler");
 const Blog = require("../model/blogModel");
 
 const getAllPost = asyncHandler(async (req, res) => {
-  const blogs = await Blog.findAll();
+  const blogs = await Blog.findAll({ where: { userId: req.user.id } });
   res.status(200).json(blogs);
 });
 
 const getPostById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const blog = await Blog.findByPk({ where: { userId: req.user.id } });
+  const blog = await Blog.findByPk(id);
   if (blog) {
     res.status(200).json(blog);
   } else {
@@ -33,10 +33,10 @@ const createBlogPost = asyncHandler(async (req, res) => {
 });
 
 const updateBlog = asyncHandler(async (req, res) => {
-  const { id } = req.params;
   const { title, content, author } = req.body;
 
-  const blog = await Blog.findByPk(id);
+  const blog = await Blog.findByPk(req.params.id);
+  console.log(req.params.id);
   if (!blog) {
     res.status(400);
     throw new Error("Blog post not fund");

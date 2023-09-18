@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const UserController = require("../controller/userController");
+const validateToken = require("../middleware/validateToken");
 
 // Define routes for user operations
-router.get("/users", UserController.getAllUsers);
-router.get("/users/:userId", UserController.getUserById);
-router.post("/users", UserController.createUser);
-router.put("/users/:userId", UserController.updateUser);
-router.delete("/users/:userId", UserController.deleteUser);
+
+router.post("/register", UserController.createUser);
+
+router.post("/login", UserController.loginUser);
+
+router.get("/current", validateToken, UserController.currentUser);
 
 module.exports = router;
